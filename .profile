@@ -10,7 +10,7 @@ chmod -c a-wx,og-r,u+r "$HOME/.profile"
 # Source user's private profile code snippets if they exist
 if [ -d "$HOME/.profile.d" ]; then
   chmod -Rc og-rwx,u+rwX "$HOME/.profile.d"
-  for i in $HOME/.profile.d/*.sh; do
+  for i in $HOME/.profile.d/*; do
     if [ -r "$i" ]; then
       . "$i"
     fi
