@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ -f "$HOME/.my_tools" ]; then
+    while read line; do
+        for word in $line; do
+            if [ -z "$(which $line)" ]; then
+                echo "[$line] is not found!"
+            fi
+        done
+    done < "$HOME/.my_tools"
+else
+    echo "No config file was found at [$HOME/.my_tools]"
+fi
