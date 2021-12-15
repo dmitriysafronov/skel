@@ -1,11 +1,11 @@
 # ~/.bash_completion: user's completion snippets
 
-# Protect user's bash_logout code file from changes and views
-chmod -c a-wx,og-r,u+r "$HOME/.bash_completion"
+# Protect user's bash_logout code file from others
+chmod og-rwx,u+rwX "$HOME/.bash_completion"
 
 # Source user's private bash completion code snippets if they exist
 if [ -d "$HOME/.bash_completion.d" ]; then
-  chmod -Rc og-rwx,u+rwX "$HOME/.bash_completion.d"
+  chmod -R og-rwx,u+rwX "$HOME/.bash_completion.d"
   for i in $HOME/.bash_completion.d/*; do
     if [ -r "$i" ]; then
       . "$i"

@@ -4,12 +4,12 @@
 # see /usr/share/doc/bash/examples/startup-files for examples.
 # the files are located in the bash-doc package.
 
-# Protect user's profile code file from changes and views
-chmod -c a-wx,og-r,u+r "$HOME/.profile"
+# Protect user's profile code file from others
+chmod og-rwx,u+rwX "$HOME/.profile"
 
 # Source user's private profile code snippets if they exist
 if [ -d "$HOME/.profile.d" ]; then
-  chmod -Rc og-rwx,u+rwX "$HOME/.profile.d"
+  chmod -R og-rwx,u+rwX "$HOME/.profile.d"
   for i in $HOME/.profile.d/*; do
     if [ -r "$i" ]; then
       . "$i"

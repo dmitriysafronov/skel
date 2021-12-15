@@ -8,12 +8,12 @@ case $- in
       *) return;;
 esac
 
-# Protect user's bashrc code file from changes and views
-chmod -c a-wx,og-r,u+r "$HOME/.bashrc"
+# Protect user's bashrc code file from others
+chmod og-rwx,u+rwX "$HOME/.bashrc"
 
 # Source user's private bashrc code snippets if they exist
 if [ -d "$HOME/.bashrc.d" ]; then
-  chmod -Rc og-rwx,u+rwX "$HOME/.bashrc.d"
+  chmod -R og-rwx,u+rwX "$HOME/.bashrc.d"
   for i in $HOME/.bashrc.d/*; do
     if [ -r "$i" ]; then
       . "$i"
