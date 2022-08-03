@@ -8,13 +8,15 @@ check_app() {
   TOOL_BIN=$1
   TOOL_NAME=$2
   if [ -z "$(which $TOOL_BIN)" ]; then
+    echo "[$TOOL_BIN] is not found!"
     if [ -z "$TOOL_VERSIONS" ]; then
-      echo "[$TOOL_BIN] is not found!"
-    else
       if [ -n "$(grep -v -e '^[[:space:]]*#' $HOME/.tool-versions | cut -s -d ' ' -f 1 | grep -w $TOOL_NAME)" ]; then
-        echo "[$TOOL_NAME] should be installed with [asdf-bootstrap]!"
-      else
-        echo "[$TOOL_NAME] is not found!"
+        echo " * [$TOOL_NAME] could be installed with [asdf]!"
+      fi
+    fi
+    if [ -n "$(which apt)" ]; then
+      if [ -n "$(apt-file search -l $TOOL_BIN | grep -x $TOOL_NAME)" ]; then
+        echo " * [$TOOL_NAME] could be installed with [apt]!"
       fi
     fi
   fi
