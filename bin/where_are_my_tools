@@ -1,13 +1,42 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-if [ -f "$HOME/.my_tools" ]; then
-    while read line; do
-        for word in $line; do
-            if [ -z "$(which $line)" ]; then
-                echo "[$line] is not found!"
-            fi
-        done
-    done < "$HOME/.my_tools"
+check_app() {
+  if [ $# -ne 2 ] ; then
+    echo "Need two args"
+    exit 1
+  fi
+  TOOL_BIN=$1
+  TOOL_NAME=$2
+  if [ -z "$(which $TOOL_BIN)" ]; then
+    if [ -z "$TOOL_VERSIONS" ]; then
+      echo "[$TOOL_BIN] is not found!"
+    else
+      if [ -n "$(grep -v -e '^[[:space:]]*#' $HOME/.tool-versions | cut -s -d ' ' -f 1 | grep -w $TOOL_NAME)" ]; then
+        echo "[$TOOL_NAME] should be installed with [asdf-bootstrap]!"
+      else
+        echo "[$TOOL_NAME] is not found!"
+      fi
+    fi
+  fi
+}
+
+if [ -s "$HOME/.tool-versions" ]; then
+  TOOL_VERSIONS=1
+fi
+
+if [ -s "$HOME/.my_tools" ]; then
+  TOOLS="$(grep -v -e '^[[:space:]]*#' $HOME/.my_tools)"
+  for TOOL in $TOOLS; do
+    TOOL_BIN=$TOOL
+    TOOL_NAME=$TOOL
+    if [ "$(echo $TOOL | grep -c '=')" -eq 1 ] ; then
+      TOOL_BIN="$(echo $TOOL | cut -s -d '=' -f 1)"
+      TOOL_NAME="$(echo $TOOL | cut -s -d '=' -f 2)"
+    elif [ "$(echo $TOOL | grep -c '=')" -gt 1 ]; then
+      echo "Mailformed record: $TOOL"
+    fi
+    check_app $TOOL_BIN $TOOL_NAME
+  done
 else
-    echo "No config file was found at [$HOME/.my_tools]"
+  echo "No config was found at [$HOME/.my_tools]"
 fi
